@@ -8,12 +8,12 @@
  */
 
 $autoload = [
-	'Events\Api' => $dir . '/library/events/api/',
-	'Micro\Messages' => $dir . '/library/micro/messages/',
-	'Utilities\Debug' => $dir . '/library/utilities/debug/',
-	'Security\Hmac' => $dir . '/library/security/hmac/',
-	'Application' => $dir . '/library/application/',
-	'Interfaces' => $dir . '/library/interfaces/',
+	'Events' => $dir . '/library/Events/',
+	'Micro' => $dir . '/library/Micro/',
+	'Utilities' => $dir . '/library/Utilities/',
+	'Security' => $dir . '/library/Security/',
+	'Application' => $dir . '/library/Application/',
+	'Interfaces' => $dir . '/library/Interfaces/',
 	'Controllers' => $dir . '/controllers/',
 	'Models' => $dir . '/models/'
 ];

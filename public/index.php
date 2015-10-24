@@ -14,9 +14,9 @@ $dir = dirname(__DIR__);
 $appDir = $dir . '/app';
 
 // Necessary requires to get things going
-require $appDir . '/library/utilities/debug/PhpError.php';
-require $appDir . '/library/interfaces/IRun.php';
-require $appDir . '/library/application/Micro.php';
+require $appDir . '/library/Utilities/Debug/PhpError.php';
+require $appDir . '/library/Interfaces/IRun.php';
+require $appDir . '/library/Application/Micro.php';
 
 // Capture runtime errors
 register_shutdown_function(['Utilities\Debug\PhpError','runtimeShutdown']);
@@ -39,12 +39,13 @@ try {
 	$app->setAutoload($autoLoad, $appDir);
 	$app->setConfig($config);
 
-	// Get Authentication Headers
-	$clientId = $app->request->getHeader('API_ID');
-	$time = $app->request->getHeader('API_TIME');
-	$hash = $app->request->getHeader('API_HASH');
+	// Get Authentication Headers - Apache compatible (need to replace _ by - on client side)
+	$clientId = $app->request->getHeader('X_API_ID');
+	$time = $app->request->getHeader('X_API_TIME');
+	$hash = $app->request->getHeader('X_API_HASH');
 
-	$privateKey = Api::findFirst($clientId)->private_key;
+    $api = Api::findFirst("public_id = '$clientId'");
+	$privateKey = $api ? $api->private_key : null;
 	
         switch ($_SERVER['REQUEST_METHOD']) {
             
@@ -65,7 +66,7 @@ try {
 
 	// Setup HMAC Authentication callback to validate user before routing message
 	// Failure to validate will stop the process before going to proper Restful Route
-	$app->setEvents(new \Events\Api\HmacAuthenticate($message, $privateKey));	
+	$app->setEventsManager(new \Events\Api\HmacAuthenticate($message, $privateKey));
 
 	// Setup RESTful Routes
 	$app->setRoutes($routes);
